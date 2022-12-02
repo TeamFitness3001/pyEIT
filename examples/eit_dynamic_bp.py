@@ -14,17 +14,22 @@ from pyeit.mesh.shape import thorax
 from pyeit.mesh.wrapper import PyEITAnomaly_Circle
 
 """ 0. build mesh """
-n_el = 16  # nb of electrodes
+n_el = 32  # nb of electrodes
 use_customize_shape = False
 if use_customize_shape:
     # Mesh shape is specified with fd parameter in the instantiation, e.g : fd=thorax
-    mesh_obj = mesh.create(n_el, h0=0.1, fd=thorax)
+    mesh_obj = mesh.create(n_el, h0=0.01, fd=thorax)
 else:
-    mesh_obj = mesh.create(n_el, h0=0.1)
+    mesh_obj = mesh.create(n_el, h0=0.05)
 
 """ 1. problem setup """
-anomaly = PyEITAnomaly_Circle(center=[0.5, 0.5], r=0.1, perm=10.0)
+anomaly = PyEITAnomaly_Circle(center=[0.3, 0.3], r=0.2, perm=10.0)
+
+# print(anomaly.mask())
+
 mesh_new = mesh.set_perm(mesh_obj, anomaly=anomaly, background=1.0)
+
+#print(mesh_new.perm)
 
 """ 2. FEM forward simulations """
 # setup EIT scan conditions
@@ -41,6 +46,8 @@ eit = bp.BP(mesh_obj, protocol_obj)
 eit.setup(weight="none")
 # the normalize for BP when dist_exc>4 should always be True
 ds = 192.0 * eit.solve(v1, v0, normalize=True)
+
+print(ds)
 
 # extract node, element, alpha
 pts = mesh_obj.node

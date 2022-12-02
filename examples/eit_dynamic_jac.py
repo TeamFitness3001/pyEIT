@@ -42,6 +42,8 @@ fwd = EITForward(mesh_obj, protocol_obj)
 v0 = fwd.solve_eit()
 v1 = fwd.solve_eit(perm=mesh_new.perm)
 
+print(v1)
+
 """ 3. JAC solver """
 # Note: if the jac and the real-problem are generated using the same mesh,
 # then, data normalization in solve are not needed.
